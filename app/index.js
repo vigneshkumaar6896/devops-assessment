@@ -9,11 +9,11 @@ app.get('/', (req, res) => {
   res.send('DevOps Assessment Running');
 });
 
-// Cloud SQL connection (secure socket path)
+// DB connection (WORKING VERSION)
 const pool = new Pool({
   user: "appuser",
   password: "Devops@12345",
-  host: "/cloudsql/devsecops-assesment-2026:asia-south1:devops-sql",
+  host: "34.100.215.18",   // Cloud SQL public IP (works now)
   database: "appdb",
   port: 5432,
 });
