@@ -9,42 +9,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      #  Checkout code
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      # Setup Node
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
+      # Install dependencies
       - name: Install dependencies
         run: npm install
 
+      #  Security scan
       - name: Run npm audit
         run: npm audit --audit-level=high
 
+      # Run tests
       - name: Run tests
         run: npm test
+
+      # Terraform formatting check
+      - name: Terraform fmt
+        run: terraform fmt -check
+        working-directory: terraform
+
+      # Terraform validate
+      - name: Terraform validate
+        run: terraform validate
+        working-directory: terraform
+
+      #  Docker build (AUTO NOW)
+      - name: Build Docker Image
+        run: docker build -t devops-node-app ./app
+
 
   terraform:
     runs-on: ubuntu-latest
     needs: ci
 
     steps:
+      # Checkout code
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      #  Setup Terraform
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
 
+      # Terraform init
       - name: Terraform Init
         run: terraform init
-        working-directory: terraform
-
-      - name: Terraform Validate
-        run: terraform validate
-        working-directory: terraform
-
-      - name: Terraform Format Check
-        run: terraform fmt -check
         working-directory: terraform
