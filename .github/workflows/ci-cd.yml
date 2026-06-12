@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      #  Checkout code
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -19,11 +19,15 @@ jobs:
         with:
           node-version: 18
 
+      # Setup Terraform (IMPORTANT FIX)
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      #  Security scan
+      # Security scan
       - name: Run npm audit
         run: npm audit --audit-level=high
 
@@ -31,7 +35,7 @@ jobs:
       - name: Run tests
         run: npm test
 
-      # Terraform formatting check
+      # Terraform format check
       - name: Terraform fmt
         run: terraform fmt -check
         working-directory: terraform
@@ -41,7 +45,7 @@ jobs:
         run: terraform validate
         working-directory: terraform
 
-      #  Docker build (AUTO NOW)
+      # Docker build (AUTO)
       - name: Build Docker Image
         run: docker build -t devops-node-app ./app
 
@@ -55,11 +59,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      #  Setup Terraform
+      # Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       # Terraform init
       - name: Terraform Init
         run: terraform init
+        working-directory: terraform
+
+      # Terraform validate (IMPORTANT ADD)
+      - name: Terraform Validate
+        run: terraform validate
         working-directory: terraform
